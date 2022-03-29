@@ -1,12 +1,15 @@
 FROM golang:1.18 as builder
 
-WORKDIR /usr/src/app
-
-COPY go.mod go.sum ./
-RUN go mod download
+WORKDIR /app
 
 COPY . .
 
-ENTRYPOINT [ "go" ]
+RUN go build
 
-CMD ["run main.go"]
+ENTRYPOINT [ "./go" ]
+
+FROM scratch
+
+COPY --from=builder  /app .
+
+ENTRYPOINT [ "./go"]
